@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday, Arina! ❤️</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #ff4d6d;
+      --secondary: #ff758f;
+      --bg-dark: #120814;
+      --card-bg: rgba(255, 255, 255, 0.08);
+      --text-light: #fff0f3;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: radial-gradient(circle at top, #2b0f2e, var(--bg-dark));
+      color: var(--text-light);
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    /* Canvas de Confetes e Brilhos */
+    #confetti-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* Tela Inicial (Envelope/Presente) */
+    #intro-screen {
+      text-align: center;
+      z-index: 20;
+      padding: 20px;
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .gift-box {
+      font-size: 5rem;
+      cursor: pointer;
+      display: inline-block;
+      animation: bounce 2s infinite;
+      filter: drop-shadow(0 0 20px rgba(255, 77, 109, 0.6));
+      user-select: none;
+    }
+
+    .intro-text {
+      margin-top: 15px;
+      font-size: 1.2rem;
+      font-weight: 300;
+      letter-spacing: 1px;
+    }
+
+    .btn-open {
+      margin-top: 25px;
+      padding: 12px 30px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: white;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 5px 20px rgba(255, 77, 109, 0.5);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-open:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 25px rgba(255, 77, 109, 0.8);
+    }
+
+    /* Conteúdo Principal */
+    #main-content {
+      display: none;
+      opacity: 0;
+      z-index: 15;
+      width: 90%;
+      max-width: 650px;
+      padding: 40px 25px;
+      margin: 30px 0;
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 24px;
+      text-align: center;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+      transition: opacity 1s ease;
+    }
+
+    .date-badge {
+      display: inline-block;
+      padding: 6px 16px;
+      background: rgba(255, 77, 109, 0.2);
+      border: 1px solid var(--primary);
+      border-radius: 20px;
+      font-size: 0.85rem;
+      color: #ffb3c1;
+      margin-bottom: 20px;
+    }
+
+    /* Moldura da Foto Dela */
+    .photo-wrapper {
+      width: 140px;
+      height: 140px;
+      margin: 0 auto 20px auto;
+      padding: 4px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, var(--primary), #ffd166, var(--secondary));
+      box-shadow: 0 0 25px rgba(255, 77, 109, 0.6);
+      animation: pulseGlow 3s infinite alternate;
+    }
+
+    .her-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 3px solid var(--bg-dark);
+      display: block;
+    }
+
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 15px rgba(255, 77, 109, 0.4); }
+      100% { box-shadow: 0 0 30px rgba(255, 117, 143, 0.9); }
+    }
+
+    h1 {
+      font-family: 'Dancing Script', cursive;
+      font-size: clamp(2.8rem, 8vw, 4.2rem);
+      color: var(--secondary);
+      text-shadow: 0 0 15px rgba(255, 117, 143, 0.4);
+      margin-bottom: 20px;
+      line-height: 1.1;
+    }
+
+    .message-box {
+      font-size: clamp(1rem, 3.5vw, 1.1rem);
+      line-height: 1.8;
+      color: #ffe5ec;
+      margin-bottom: 30px;
+      min-height: 140px;
+      text-align: center;
+    }
+
+    /* Vela Interativa */
+    .cake-section {
+      margin: 25px 0;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 16px;
+    }
+
+    .candle {
+      font-size: 3.5rem;
+      cursor: pointer;
+      transition: transform 0.3s;
+      display: inline-block;
+    }
+
+    .candle:hover {
+      transform: scale(1.1);
+    }
+
+    .wish-status {
+      font-size: 0.9rem;
+      color: #ffb3c1;
+      margin-top: 10px;
+    }
+
+    .btn-celebrate {
+      margin-top: 15px;
+      padding: 10px 24px;
+      font-size: 0.95rem;
+      background: transparent;
+      color: var(--text-light);
+      border: 1px solid var(--secondary);
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-celebrate:hover {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .footer-sign {
+      margin-top: 30px;
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.8rem;
+      color: #ffb3c1;
+    }
+
+    /* Corações flutuantes no fundo */
+    .floating-heart {
+      position: fixed;
+      bottom: -20px;
+      font-size: 1.5rem;
+      opacity: 0.6;
+      animation: floatUp linear forwards;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-20px); }
+      60% { transform: translateY(-10px); }
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(0.8); opacity: 0.7; }
+      100% { transform: translateY(-110vh) scale(1.3); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Tela 1: Presente fechado -->
+  <div id="intro-screen">
+    <div class="gift-box" onclick="openSurprise()">🎁</div>
+    <p class="intro-text">Midnight has arrived, and it brought something special....</p>
+    <button class="btn-open" onclick="openSurprise()">Open Surprise ✨</button>
+  </div>
+
+  <!-- Tela 2: Cartão de Aniversário -->
+  <div id="main-content">
+    <span class="date-badge">November 19 ✨</span>
+    
+    <!-- FOTO DELA -->
+    <div class="photo-wrapper">
+      <!-- EDITE AQUI: Certifique-se de salvar a foto dela com este exato nome na pasta do repositório -->
+      <img src="arina.jpg" alt="Arina" class="her-photo">
+    </div>
+
+    <!-- EDITE AQUI: Nome dela -->
+    <h1>Happy Birthday, My Love!</h1>
+
+    <div class="message-box">
+      <p id="typewriter-text"></p>
+    </div>
+
+    <div class="cake-section">
+      <div class="candle" id="cake-emoji" onclick="blowCandle()">🎂</div>
+      <p class="wish-status" id="wish-text">Close your eyes, make a wish, and touch the cake! 🕯️</p>
+      <button class="btn-celebrate" onclick="launchConfettiBurst()">Throw more confetti 🎉</button>
+    </div>
+
+    <!-- EDITE AQUI: Sua assinatura -->
+    <div class="footer-sign">With all my love, your hubby ❤️</div>
+  </div>
+
+  <script>
+    // EDITE AQUI: A mensagem que vai aparecer digitada na tela
+    const birthdayMessage = "Even with the distance and the time zones between us, I couldn’t let the very first second of your day go by unnoticed. May this new chapter fulfill all your dreams and bring you plenty of peace, good health, and reasons to smile. Thank you for being such an incredible woman in my life. Enjoy your day to the fullest, Happy birthday, hunny mayalu!";
+
+    let i = 0;
+    const speed = 100; // Velocidade da digitação em ms
+
+    function typeWriter() {
+      if (i < birthdayMessage.length) {
+        document.getElementById("typewriter-text").innerHTML += birthdayMessage.charAt(i);
+        i++;
+        setTimeout(typeWriter, speed);
+      }
+    }
+
+    function openSurprise() {
+      const intro = document.getElementById('intro-screen');
+      const main = document.getElementById('main-content');
+
+      intro.style.opacity = '0';
+      intro.style.transform = 'scale(0.9)';
+
+      setTimeout(() => {
+        intro.style.display = 'none';
+        main.style.display = 'block';
+        setTimeout(() => {
+          main.style.opacity = '1';
+          typeWriter();
+          launchConfettiBurst();
+        }, 50);
+      }, 700);
+    }
+
+    function blowCandle() {
+      const wishText = document.getElementById('wish-text');
+      const cake = document.getElementById('cake-emoji');
+      cake.innerHTML = '🥳✨';
+      wishText.innerHTML = 'Wish made! May they all come true! ❤️';
+      launchConfettiBurst();
+    }
+
+    // Corações subindo no fundo
+    function createFloatingHeart() {
+      const heart = document.createElement('div');
+      heart.classList.add('floating-heart');
+      const emojis = ['❤️', '💖', '✨', '🌸', '💕'];
+      heart.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.animationDuration = (Math.random() * 4 + 4) + 's';
+      document.body.appendChild(heart);
+
+      setTimeout(() => {
+        heart.remove();
+      }, 8000);
+    }
+    setInterval(createFloatingHeart, 600);
+
+    // Sistema de Confetes em Canvas
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    let confetti = [];
+    const colors = ['#ff4d6d', '#ff758f', '#ffb3c1', '#ffd166', '#ffffff', '#c77dff'];
+
+    function launchConfettiBurst() {
+      for (let i = 0; i < 120; i++) {
+        confetti.push({
+          x: canvas.width / 2,
+          y: canvas.height / 2,
+          r: Math.random() * 6 + 3,
+          dx: (Math.random() - 0.5) * 16,
+          dy: (Math.random() - 0.7) * 16,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          tilt: Math.random() * 10,
+          tiltAngle: 0,
+          tiltAngleIncrement: Math.random() * 0.07 + 0.05
+        });
+      }
+    }
+
+    function updateConfetti() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      confetti.forEach((c, index) => {
+        c.tiltAngle += c.tiltAngleIncrement;
+        c.y += (Math.cos(c.tiltAngle) + 2 + c.r / 2) * 0.8;
+        c.x += Math.sin(c.tiltAngle) * 1.5 + c.dx * 0.15;
+        c.dx *= 0.96;
+        c.dy *= 0.96;
+        c.y += c.dy;
+
+        ctx.beginPath();
+        ctx.lineWidth = c.r;
+        ctx.strokeStyle = c.color;
+        ctx.moveTo(c.x + c.tilt + c.r / 2, c.y);
+        ctx.lineTo(c.x + c.tilt, c.y + c.tilt + c.r / 2);
+        ctx.stroke();
+
+        if (c.y > canvas.height) {
+          confetti.splice(index, 1);
+        }
+      });
+      requestAnimationFrame(updateConfetti);
+    }
+
+    updateConfetti();
+  </script>
+</body>
+</html>
